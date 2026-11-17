@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unikate & Programme</title>
+<style>
+  :root {
+    --gradient: linear-gradient(90deg, #1d4ed8 0%, #0d9488 100%);
+    --bg: #f1f5f9;
+    --card-bg: #ffffff;
+    --text: #1e293b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+
+  header { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; }
+  .nav-container { max-width: 1280px; margin: 0 auto; padding: 12px 14px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .nav-btn {
+    background: #f8fafc; border: 1px solid #cbd5e1; color: #334155;
+    padding: 8px 13px; border-radius: 20px; font-size: 0.86rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .nav-btn:hover, .nav-btn.active { background: #1d4ed8; color: #ffffff; border-color: #1d4ed8; }
+  .nav-btn.contact-highlight { background: #0d9488; color: #ffffff; border-color: #0d9488; }
+  .nav-btn.contact-highlight:hover { background: #0f766e; border-color: #0f766e; }
+
+  #top-text-panel { max-width: 1000px; margin: 16px auto 0; padding: 0 16px; display: none; }
+  .text-box {
+    background: #ffffff; border-left: 5px solid #1d4ed8; border-radius: 12px;
+    padding: 24px 28px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); position: relative;
+  }
+  .text-box h2 { color: #0f172a; margin-bottom: 6px; font-size: 1.35rem; padding-right: 36px; }
+  .text-box .sub-lead { color: #1d4ed8; font-weight: 600; margin-bottom: 12px; font-size: 1rem; }
+  .text-box p { margin-bottom: 10px; }
+  .close-panel {
+    position: absolute; top: 14px; right: 16px; background: #e2e8f0; border: none;
+    border-radius: 50%; width: 32px; height: 32px; font-weight: bold; cursor: pointer; font-size: 1rem;
+  }
+  .close-panel:hover { background: #cbd5e1; }
+
+  .hero { text-align: center; padding: 30px 16px 22px; max-width: 900px; margin: 0 auto; }
+  .hero h1 { font-size: clamp(1.9rem, 4vw, 2.9rem); color: #0f172a; margin-bottom: 8px; }
+  .hero p { font-size: clamp(1rem, 2vw, 1.2rem); color: #475569; }
+  .action-bar { background: var(--gradient); color: #ffffff; padding: 18px 16px; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25); }
+  .action-inner { max-width: 800px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+  .action-btn {
+    background: rgba(255,255,255,0.18); border: 2px solid #ffffff; color: #ffffff;
+    padding: 12px 28px; border-radius: 30px; font-size: 1.05rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.2s;
+  }
+  .action-btn:hover { background: #ffffff; color: #1d4ed8; }
+
+  #audio-panel, #read-panel { max-width: 950px; margin: 18px auto 0; padding: 0 16px; display: none; }
+  .audio-box { text-align: center; padding: 10px 0; }
+  audio, video { width: 100%; max-width: 600px; margin-top: 10px; border-radius: 10px; }
+  .read-section-item { border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; margin-bottom: 16px; }
+  .read-section-item h3 { color: #0f172a; margin-bottom: 4px; }
+  .read-section-item .item-sub { color: #1d4ed8; font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; }
+  .read-section-item p { margin-bottom: 8px; }
+  .read-section-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .grid-section { max-width: 1180px; margin: 32px auto 32px; padding: 0 16px; }
+  .tiles-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  @media (max-width: 920px) { .tiles-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .tiles-grid { grid-template-columns: 1fr; } }
+
+  .tile {
+    background: var(--card-bg); border-radius: 14px; padding: 24px 16px; text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    border-top: 6px solid #cbd5e1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 175px;
+  }
+  .tile:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.12); }
+  .tile-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .tile h3 { font-size: 1.05rem; color: #0f172a; margin-bottom: 6px; }
+  .tile span { font-size: 0.84rem; color: #64748b; }
+
+  .t1 { border-top-color: #d97706; } .t1 .tile-icon { background: #fef3c7; color: #d97706; }
+  .t2 { border-top-color: #2563eb; } .t2 .tile-icon { background: #dbeafe; color: #2563eb; }
+  .t3 { border-top-color: #ea580c; } .t3 .tile-icon { background: #ffedd5; color: #ea580c; }
+  .t4 { border-top-color: #9333ea; } .t4 .tile-icon { background: #f3e8ff; color: #9333ea; }
+  .t5 { border-top-color: #0891b2; } .t5 .tile-icon { background: #cffafe; color: #0891b2; }
+  .t6 { border-top-color: #65a30d; } .t6 .tile-icon { background: #ecfccb; color: #65a30d; }
+  .t7 { border-top-color: #16a34a; } .t7 .tile-icon { background: #dcfce7; color: #16a34a; }
+
+  #media-gallery-panel { max-width: 1180px; margin: 0 auto 60px; padding: 0 16px; display: none; }
+  .gallery-box {
+    background: #ffffff; border-radius: 16px; padding: 26px; box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    position: relative; border-top: 6px solid #1d4ed8;
+  }
+  .gallery-box h2 { margin-bottom: 14px; color: #0f172a; padding-right: 36px; }
+  .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-top: 16px; }
+  .media-card {
+    background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 14px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .media-card strong { margin-bottom: 10px; color: #0f172a; font-size: 0.98rem; }
+  .media-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; cursor: zoom-in; }
+  .media-card video { width: 100%; max-height: 220px; border-radius: 8px; background: #000; margin-top: 0; }
+  .media-card audio { width: 100%; margin-top: 8px; }
+  .privacy-notice { background: #faf5ff; border-left: 5px solid #9333ea; padding: 20px; border-radius: 10px; color: #1e293b; }
+
+  .zoom-overlay {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.88);
+    display: none; align-items: center; justify-content: center; padding: 16px; z-index: 300; cursor: zoom-out;
+  }
+  .zoom-overlay img { max-width: 95%; max-height: 90vh; border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+</style>
+</head>
+<body>
+
+  <header>
+    <nav class="nav-container" id="topNav">
+      <button type="button" class="nav-btn active" onclick="showTopText('uebersicht', this)">Übersicht</button>
+      <button type="button" class="nav-btn" onclick="showTopText('geburtstag', this)">1. Geburtstag</button>
+      <button type="button" class="nav-btn" onclick="showTopText('zeiterfassung', this)">2. Zeiterfassung</button>
+      <button type="button" class="nav-btn" onclick="showTopText('kivideos', this)">3. KI-Videos & Fotos</button>
+      <button type="button" class="nav-btn" onclick="showTopText('fotorettung', this)">4. Foto-Rettung & Diashow</button>
+      <button type="button" class="nav-btn" onclick="showTopText('songs', this)">5. Eigene Songs & Reden</button>
+      <button type="button" class="nav-btn" onclick="showTopText('stammbaum', this)">6. Stammbaum</button>
+      <button type="button" class="nav-btn" onclick="showTopText('vertrieb', this)">7. Vertrieb, Logistik & Montage</button>
+      <button type="button" class="nav-btn contact-highlight" onclick="showTopText('kontakt', this)">Kontakt</button>
+    </nav>
+  </header>
+
+  <div id="top-text-panel">
+    <div class="text-box">
+      <button type="button" class="close-panel" onclick="document.getElementById('top-text-panel').style.display='none'">✕</button>
+      <div id="top-text-content"></div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <h1>Unikate & Programme</h1>
+    <p>Individuelle und persönliche Programme, Videos, Fotos, Musik, Reden uvm.</p>
+  </section>
+
+  <div class="action-bar">
+    <div class="action-inner">
+      <button type="button" class="action-btn" onclick="toggleMainPanel('audio-panel')">▶ zum Anhören</button>
+      <button type="button" class="action-btn" onclick="toggleMainPanel('read-panel')">📖 zum Lesen</button>
+    </div>
+  </div>
+
+  <div id="audio-panel">
+    <div class="text-box">
+      <button type="button" class="close-panel" onclick="document.getElementById('audio-panel').style.display='none'">✕</button>
+      <div class="audio-box">
+        <h2>Vorstellung zum Anhören</h2>
+        <p>Höre dir alle Bereiche bequem direkt hier an:</p>
+        <audio controls controlsList="nodownload">
+          <source src="zum Anhören.mp3" type="audio/mpeg">
+          Dein Browser unterstützt das Audio-Element leider nicht.
+        </audio>
+      </div>
+    </div>
+  </div>
+
+  <div id="read-panel">
+    <div class="text-box">
+      <button type="button" class="close-panel" onclick="document.getElementById('read-panel').style.display='none'">✕</button>
+      <h2>Willkommen auf der Seite Unikate & Programme</h2>
+      <p class="sub-lead">Individuelle und persönliche Programme, Videos, Fotos, Musik, Reden uvm.</p>
+      <p>Willkommen bei deinem Ansprechpartner für maßgeschneiderte digitale Helfer und unvergessliche persönliche Geschenke. Egal ob du deinen Alltag und Betrieb besser organisieren oder deinen Liebsten eine ganz besondere Freude machen möchtest – hier bekommst du kein Standardprodukt von der Stange, sondern genau das, was zu dir passt.</p>
+      <p style="margin-bottom: 20px;"><strong>Unverbindliche Anfrage:</strong> Hast du eine Idee, eine Frage zu einem Programm oder möchtest du ein persönliches Unikat beauftragen? Melde dich gerne unverbindlich bei mir – ich berate dich persönlich und setze dein Projekt genau nach deinen Wünschen um.</p>
+
+      <div class="read-section-item">
+        <h3>1. Geburtstag & Familienkalender</h3>
+        <div class="item-sub">Alle wichtigen Tage und Jubiläen entspannt im Griff</div>
+        <p><strong>Persönlicher Familien- & Termin-Kalender:</strong> Alle Geburtstage, Hochzeitstage (inklusive großer Jubiläen wie Silber- oder Goldene Hochzeit), Urlaube, würdevolle Gedenktage und ein tagesgenauer Pensions-Countdown immer griffbereit auf Handy, Tablet und PC. Alles funktioniert komplett ohne Internet und ohne Cloud – zu 100 % privat auf deinem eigenen Gerät, inklusive automatischem 5-Tage-Terminwächter und direkten WhatsApp-Glückwünschen.</p>
+        <p><strong>Besondere Geschenkideen für Feiern:</strong> Du planst einen runden Geburtstag, eine Hochzeit, ein Jubiläum oder den Abschied in die Pension? Gerne kombinieren wir deinen persönlichen Kalender auch mit einem eigenen Song, einer Rede oder einem Überraschungsvideo.</p>
+      </div>
+
+      <div class="read-section-item">
+        <h3>2. Zeiterfassung</h3>
+        <div class="item-sub">Die Arbeitszeit im Alltag einfach und genau im Blick</div>
+        <p><strong>Zeiterfassung im Alltag:</strong> Du trägst einfach Beginn, Ende und Pause ein – Soll-Stunden, Plus-/Minus-Konto, gesetzliche Feiertage sowie Überstunden und Zuschläge (50 % und 100 %) rechnen sich ganz von selbst.</p>
+        <p><strong>Monatsbericht per Klick:</strong> Am Monatsende erhältst du deinen übersichtlichen, fertigen Zeitbericht sofort auf Knopfdruck.</p>
+      </div>
+
+      <div class="read-section-item">
+        <h3>3. KI-Videos & Fotos</h3>
+        <div class="item-sub">Momente, die bleiben – zum Lachen, Staunen und Berühren</div>
+        <p><strong>Lebendige Geschichten aus deinen Bildern:</strong> Deine Fotos, Schnappschüsse und Ideen werden in ein einzigartiges Video- und Bilderlebnis verwandelt.</p>
+        <p><strong>Von emotional bis humorvoll:</strong> Ob ein berührender Rückblick zum runden Geburtstag, zur Hochzeit und Pension oder eine kreative, lustige KI-Überraschung für die nächste Feier – alles wird individuell nach deinen Wünschen umgesetzt.</p>
+      </div>
+
+      <div class="read-section-item">
+        <h3>4. Foto-Rettung & Diashow</h3>
+        <div class="item-sub">Alte Schätze bewahren und neu erleben</div>
+        <p><strong>Foto-Rettung & Auffrischung:</strong> Verblasste, beschädigte oder alte Papierfotos werden digitalisiert, behutsam restauriert und wieder in neuem Glanz sichtbar gemacht. <em>(Hinweis: Aus Gründen des Datenschutzes und zum Schutz der Privatsphäre werden keine Vorher-Nachher-Gesichtsaufnahmen veröffentlicht.)</em></p>
+        <p><strong>Stimmungsvolle Diashows:</strong> Aus deinen schönsten Bildern entsteht eine harmonisch geschnittene, mit Musik unterlegte Diashow – sofort abspielbereit für Familienfeste, Jubiläen oder als bleibendes Erinnerungsstück.</p>
+      </div>
+
+      <div class="read-section-item">
+        <h3>5. Eigene Songs & Reden</h3>
+        <div class="item-sub">Worte und Melodien, die direkt ins Herz treffen</div>
+        <p><strong>Dein persönlicher Song:</strong> Aus deinen Anekdoten, Insider-Witzen und gemeinsamen Erlebnissen entsteht ein individuell getextetes und vertontes Lied – vom gefühlvollen Akustik-Song bis zum fröhlichen Party-Hit.</p>
+        <p><strong>Festrede nach Maß:</strong> Ob Hochzeit, runder Geburtstag, Vereinsjubiläum oder Abschiedsfeier – du erhältst eine persönlich geschriebene, humorvolle oder tief bewegende Rede, fix und fertig zum Vortragen.</p>
+      </div>
+
+      <div class="read-section-item">
+        <h3>6. Stammbaum</h3>
+        <div class="item-sub">Wurzeln sichtbar machen – über Generationen hinweg</div>
+        <p><strong>Ordnung in der Familiengeschichte:</strong> Aus deinen Notizen, alten Urkunden und Erzählungen entsteht ein klar strukturierter und übersichtlicher Stammbaum über Generationen hinweg.</p>
+        <p><strong>Ein Schatz für Generationen:</strong> Auf Wunsch ergänzt mit Fotos, Lebensdaten, Familienstatistiken und Ahnentafeln – ideal als hochwertiges Geschenk für Eltern und Großeltern oder als Highlight für das nächste Familientreffen.</p>
+      </div>
+
+      <div class="read-section-item">
+        <h3>7. Vertrieb, Logistik & Montage</h3>
+        <div class="item-sub">Maßgeschneiderte Software für klare betriebliche Abläufe</div>
+        <p><strong>Alles von Auftrag bis Rechnung:</strong> Individuelle Datenbank- und Softwarelösungen für Betriebe, die Kunden, Aufträge, Termine und Einsätze ohne Zettelwirtschaft steuern möchten.</p>
+        <p><strong>Volle Übersicht im Betrieb:</strong> Von der Auftragserfassung über die Kalender- und Wochen-Disposition bis hin zu digitalen Arbeitsberichten, Lieferungen, Rechnungskontrolle und Umsatzstatistiken läuft alles zentral zusammen.</p>
+      </div>
+    </div>
+  </div>
+  <section class="grid-section">
+    <div class="tiles-grid">
+      <div class="tile t1" onclick="openMediaGallery('geburtstag')">
+        <div class="tile-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="M12 18.5l-3.2-3.1a2.1 2.1 0 0 1 3-3l.2.2.2-.2a2.1 2.1 0 0 1 3 3L12 18.5z"></path></svg>
+        </div>
+        <h3>1. Geburtstag</h3>
+        <span>7 Beispiele anzeigen</span>
+      </div>
+
+      <div class="tile t2" onclick="openMediaGallery('zeiterfassung')">
+        <div class="tile-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline><path d="M16 19l2 2 4-4"></path></svg>
+        </div>
+        <h3>2. Zeiterfassung</h3>
+        <span>5 Ansichten anzeigen</span>
+      </div>
+
+      <div class="tile t3" onclick="openMediaGallery('kivideos')">
+        <div class="tile-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2"></path><path d="M15 16v-2"></path><path d="M8 9h2"></path><path d="M20 9h2"></path><path d="M17.8 11.8L19 13"></path><path d="M15 9h0"></path><path d="M17.8 6.2L19 5"></path><path d="M3 21l9-9"></path><path d="M12.2 6.2L11 5"></path></svg>
+        </div>
+        <h3>3. KI-Videos & Fotos</h3>
+        <span>18 Beispiele anzeigen</span>
+      </div>
+
+      <div class="tile t4" onclick="openMediaGallery('fotorettung')">
+        <div class="tile-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+        </div>
+        <h3>4. Foto-Rettung & Diashow</h3>
+        <span>Datenschutz-Hinweis lesen</span>
+      </div>
+
+      <div class="tile t5" onclick="openMediaGallery('songs')">
+        <div class="tile-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>
+        </div>
+        <h3>5. Eigene Songs & Reden</h3>
+        <span>7 Hörproben & Videos</span>
+      </div>
+
+      <div class="tile t6" onclick="openMediaGallery('stammbaum')">
+        <div class="tile-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"></rect><rect x="2" y="18" width="6" height="4" rx="1"></rect><rect x="16" y="18" width="6" height="4" rx="1"></rect><path d="M5 18v-3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"></path><line x1="12" y1="6" x2="12" y2="13"></line></svg>
+        </div>
+        <h3>6. Stammbaum</h3>
+        <span>3 Beispiele anzeigen</span>
+      </div>
+
+      <div class="tile t7" onclick="openMediaGallery('vertrieb')">
+        <div class="tile-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M9 14l2 2 4-4"></path></svg>
+        </div>
+        <h3>7. Vertrieb, Logistik & Montage</h3>
+        <span>7 Programm-Ansichten</span>
+      </div>
+    </div>
+  </section>
+
+  <div id="media-gallery-panel">
+    <div class="gallery-box" id="gallery-box">
+      <button type="button" class="close-panel" onclick="document.getElementById('media-gallery-panel').style.display='none'">✕</button>
+      <div id="gallery-content"></div>
+    </div>
+  </div>
+
+  <div class="zoom-overlay" id="zoomOverlay" onclick="this.style.display='none'">
+    <img id="zoomImg" src="" alt="Vollbild">
+  </div>
+
+<script>
+  const topTexts = {
+    uebersicht: null,
+    geburtstag: {
+      title: "1. Geburtstag & Familienkalender",
+      lead: "Alle wichtigen Tage und Jubiläen entspannt im Griff",
+      body: "<p><strong>Persönlicher Familien- & Termin-Kalender:</strong> Alle Geburtstage, Hochzeitstage (inklusive großer Jubiläen wie Silber- oder Goldene Hochzeit), Urlaube, würdevolle Gedenktage und ein tagesgenauer Pensions-Countdown immer griffbereit auf Handy, Tablet und PC. Alles funktioniert komplett ohne Internet und ohne Cloud – zu 100 % privat auf deinem eigenen Gerät, inklusive automatischem 5-Tage-Terminwächter und direkten WhatsApp-Glückwünschen.</p><p><strong>Besondere Geschenkideen für Feiern:</strong> Du planst einen runden Geburtstag, eine Hochzeit, ein Jubiläum oder den Abschied in die Pension? Gerne kombinieren wir deinen persönlichen Kalender auch mit einem eigenen Song, einer Rede oder einem Überraschungsvideo.</p>"
+    },
+    zeiterfassung: {
+      title: "2. Zeiterfassung",
+      lead: "Die Arbeitszeit im Alltag einfach und genau im Blick",
+      body: "<p><strong>Zeiterfassung im Alltag:</strong> Du trägst einfach Beginn, Ende und Pause ein – Soll-Stunden, Plus-/Minus-Konto, gesetzliche Feiertage sowie Überstunden und Zuschläge (50 % und 100 %) rechnen sich ganz von selbst.</p><p><strong>Monatsbericht per Klick:</strong> Am Monatsende erhältst du deinen übersichtlichen, fertigen Zeitbericht sofort auf Knopfdruck.</p>"
+    },
+    kivideos: {
+      title: "3. KI-Videos & Fotos",
+      lead: "Momente, die bleiben – zum Lachen, Staunen und Berühren",
+      body: "<p><strong>Lebendige Geschichten aus deinen Bildern:</strong> Deine Fotos, Schnappschüsse und Ideen werden in ein einzigartiges Video- und Bilderlebnis verwandelt.</p><p><strong>Von emotional bis humorvoll:</strong> Ob ein berührender Rückblick zum runden Geburtstag, zur Hochzeit und Pension oder eine kreative, lustige KI-Überraschung für die nächste Feier – alles wird individuell nach deinen Wünschen umgesetzt.</p>"
+    },
+    fotorettung: {
+      title: "4. Foto-Rettung & Diashow",
+      lead: "Alte Schätze bewahren und neu erleben",
+      body: "<p><strong>Foto-Rettung & Auffrischung:</strong> Verblasste, beschädigte oder alte Papierfotos werden digitalisiert, behutsam restauriert und wieder in neuem Glanz sichtbar gemacht. <em>(Hinweis: Aus Gründen des Datenschutzes und zum Schutz der Privatsphäre werden keine Vorher-Nachher-Gesichtsaufnahmen veröffentlicht.)</em></p><p><strong>Stimmungsvolle Diashows:</strong> Aus deinen schönsten Bildern entsteht eine harmonisch geschnittene, mit Musik unterlegte Diashow – sofort abspielbereit für Familienfeste, Jubiläen oder als bleibendes Erinnerungsstück.</p>"
+    },
+    songs: {
+      title: "5. Eigene Songs & Reden",
+      lead: "Worte und Melodien, die direkt ins Herz treffen",
+      body: "<p><strong>Dein persönlicher Song:</strong> Aus deinen Anekdoten, Insider-Witzen und gemeinsamen Erlebnissen entsteht ein individuell getextetes und vertontes Lied – vom gefühlvollen Akustik-Song bis zum fröhlichen Party-Hit.</p><p><strong>Festrede nach Maß:</strong> Ob Hochzeit, runder Geburtstag, Vereinsjubiläum oder Abschiedsfeier – du erhältst eine persönlich geschriebene, humorvolle oder tief bewegende Rede, fix und fertig zum Vortragen.</p>"
+    },
+    stammbaum: {
+      title: "6. Stammbaum",
+      lead: "Wurzeln sichtbar machen – über Generationen hinweg",
+      body: "<p><strong>Ordnung in der Familiengeschichte:</strong> Aus deinen Notizen, alten Urkunden und Erzählungen entsteht ein klar strukturierter und übersichtlicher Stammbaum über Generationen hinweg.</p><p><strong>Ein Schatz für Generationen:</strong> Auf Wunsch ergänzt mit Fotos, Lebensdaten, Familienstatistiken und Ahnentafeln – ideal als hochwertiges Geschenk für Eltern und Großeltern oder als Highlight für das nächste Familientreffen.</p>"
+    },
+    vertrieb: {
+      title: "7. Vertrieb, Logistik & Montage",
+      lead: "Maßgeschneiderte Software für klare betriebliche Abläufe",
+      body: "<p><strong>Alles von Auftrag bis Rechnung:</strong> Individuelle Datenbank- und Softwarelösungen für Betriebe, die Kunden, Aufträge, Termine und Einsätze ohne Zettelwirtschaft steuern möchten.</p><p><strong>Volle Übersicht im Betrieb:</strong> Von der Auftragserfassung über die Kalender- und Wochen-Disposition bis hin zu digitalen Arbeitsberichten, Lieferungen, Rechnungskontrolle und Umsatzstatistiken läuft alles zentral zusammen.</p>"
+    },
+    kontakt: {
+      title: "Kontakt & Anfrage",
+      lead: "Hast du eine Idee oder einen Wunsch? Melde dich gerne!",
+      body: "<p><strong>Unverbindliche Beratung:</strong> Hast du eine Frage zu einem Programm oder möchtest du ein persönliches Unikat beauftragen? Melde dich gerne unverbindlich bei mir – ich berate dich persönlich und setze dein Projekt genau nach deinen Wünschen um.</p><p><strong>E-Mail:</strong> <a href='mailto:fa.ma@gmx.at' style='color:#1d4ed8; font-weight:bold; text-decoration:underline;'>fa.ma@gmx.at</a></p>"
+    }
+  };
+  const mediaData = {
+    geburtstag: {
+      title: "1. Geburtstag & Familienkalender – Beispiele",
+      color: "#d97706",
+      items: [
+        { title: "Video-Vorstellung", type: "video", src: "1. Geburtstag/1.mp4" },
+        { title: "Hörprobe 1", type: "audio", src: "1. Geburtstag/2.mp3" },
+        { title: "Hörprobe 2", type: "audio", src: "1. Geburtstag/3.mp3" },
+        { title: "Hörprobe 3", type: "audio", src: "1. Geburtstag/4.mp3" },
+        { title: "Hörprobe 4", type: "audio", src: "1. Geburtstag/5.mp3" },
+        { title: "Geburtstag System 1", type: "image", src: "1. Geburtstag/Geburtstag System.jpg" },
+        { title: "Geburtstag System 2", type: "image", src: "1. Geburtstag/Geburtstag System1.jpg" }
+      ]
+    },
+    zeiterfassung: {
+      title: "2. Zeiterfassung – Programm-Ansichten",
+      color: "#2563eb",
+      items: [
+        { title: "Ansicht 1 (Übersicht)", type: "image", src: "2. Zeiterfassung/0.jpg" },
+        { title: "Ansicht 2 (Erfassung)", type: "image", src: "2. Zeiterfassung/1.jpg" },
+        { title: "Ansicht 3 (Zuschläge)", type: "image", src: "2. Zeiterfassung/2.jpg" },
+        { title: "Ansicht 4 (Auswertung)", type: "image", src: "2. Zeiterfassung/3.jpg" },
+        { title: "Ansicht 5 (Monatsbericht)", type: "image", src: "2. Zeiterfassung/4.jpg" }
+      ]
+    },
+    kivideos: {
+      title: "3. KI-Videos & Fotos – Beispiele",
+      color: "#ea580c",
+      items: [
+        { title: "KI-Foto 1", type: "image", src: "3. KI Videos & Fotos/1.jpg" },
+        { title: "KI-Foto 2", type: "image", src: "3. KI Videos & Fotos/2.jpg" },
+        { title: "KI-Foto 3", type: "image", src: "3. KI Videos & Fotos/3.jpg" },
+        { title: "KI-Video 4", type: "video", src: "3. KI Videos & Fotos/4.mp4" },
+        { title: "KI-Video 5", type: "video", src: "3. KI Videos & Fotos/5.mp4" },
+        { title: "KI-Video 6", type: "video", src: "3. KI Videos & Fotos/6.mp4" },
+        { title: "KI-Foto 7", type: "image", src: "3. KI Videos & Fotos/7.jpg" },
+        { title: "KI-Video 8", type: "video", src: "3. KI Videos & Fotos/8.mp4" },
+        { title: "KI-Video 9", type: "video", src: "3. KI Videos & Fotos/9.mp4" },
+        { title: "KI-Video 10", type: "video", src: "3. KI Videos & Fotos/10.mp4" },
+        { title: "KI-Video 11", type: "video", src: "3. KI Videos & Fotos/11.mp4" },
+        { title: "KI-Video 12", type: "video", src: "3. KI Videos & Fotos/12.mp4" },
+        { title: "KI-Video 13", type: "video", src: "3. KI Videos & Fotos/13.mp4" },
+        { title: "KI-Video 14", type: "video", src: "3. KI Videos & Fotos/14.mp4" },
+        { title: "KI-Video 15", type: "video", src: "3. KI Videos & Fotos/15.mp4" },
+        { title: "KI-Video 16", type: "video", src: "3. KI Videos & Fotos/16.mp4" },
+        { title: "KI-Video 17", type: "video", src: "3. KI Videos & Fotos/17.mp4" },
+        { title: "KI-Video 18", type: "video", src: "3. KI Videos & Fotos/18.mp4" }
+      ]
+    },
+    fotorettung: {
+      title: "4. Foto-Rettung & Diashow – Hinweis",
+      color: "#9333ea",
+      privacyOnly: true
+    },
+    songs: {
+      title: "5. Eigene Songs & Reden – Hörproben & Videos",
+      color: "#0891b2",
+      items: [
+        { title: "Festrede / Text-Beispiel", type: "image", src: "5. Eigene Songs & Reden/1.jpeg" },
+        { title: "Hörprobe 2", type: "audio", src: "5. Eigene Songs & Reden/2.mp3" },
+        { title: "Hörprobe 3", type: "audio", src: "5. Eigene Songs & Reden/3.mp3" },
+        { title: "Hörprobe 4", type: "audio", src: "5. Eigene Songs & Reden/4.mp3" },
+        { title: "Song-Video 5", type: "video", src: "5. Eigene Songs & Reden/5.mp4" },
+        { title: "Hörprobe 6", type: "audio", src: "5. Eigene Songs & Reden/6.mp3" },
+        { title: "Hörprobe 7", type: "audio", src: "5. Eigene Songs & Reden/7.mp3" }
+      ]
+    },
+    stammbaum: {
+      title: "6. Stammbaum – Beispiele",
+      color: "#65a30d",
+      items: [
+        { title: "Stammbaum Beispiel 1", type: "image", src: "6. Stammbaum/1.jpg" },
+        { title: "Stammbaum Beispiel 2", type: "image", src: "6. Stammbaum/2.jpg" },
+        { title: "Stammbaum Beispiel 3", type: "image", src: "6. Stammbaum/3.jpg" }
+      ]
+    },
+    vertrieb: {
+      title: "7. Vertrieb, Logistik & Montage – Programm-Ansichten",
+      color: "#16a34a",
+      items: [
+        { title: "Programm-Ansicht 1", type: "image", src: "7. Vertrieb, Logistik & Montage/1.jpg" },
+        { title: "Programm-Ansicht 2", type: "image", src: "7. Vertrieb, Logistik & Montage/2.jpg" },
+        { title: "Programm-Ansicht 3", type: "image", src: "7. Vertrieb, Logistik & Montage/3.jpg" },
+        { title: "Programm-Ansicht 4", type: "image", src: "7. Vertrieb, Logistik & Montage/4.jpg" },
+        { title: "Programm-Ansicht 5", type: "image", src: "7. Vertrieb, Logistik & Montage/5.jpg" },
+        { title: "Programm-Ansicht 6", type: "image", src: "7. Vertrieb, Logistik & Montage/6.jpg" },
+        { title: "Rast & Ruh Softwareübersicht", type: "image", src: "7. Vertrieb, Logistik & Montage/Rast & Ruh_ Softwareübersicht.png" }
+      ]
+    }
+  };
+
+  function showTopText(key, btnEl) {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+    const panel = document.getElementById('top-text-panel');
+    if (!topTexts[key]) {
+      panel.style.display = 'none';
+      return;
+    }
+    document.getElementById('top-text-content').innerHTML =
+      `<h2>${topTexts[key].title}</h2><div class="sub-lead">${topTexts[key].lead}</div>${topTexts[key].body}`;
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function toggleMainPanel(panelId) {
+    const audioP = document.getElementById('audio-panel');
+    const readP = document.getElementById('read-panel');
+    if (panelId === 'audio-panel') {
+      readP.style.display = 'none';
+      audioP.style.display = (audioP.style.display === 'block') ? 'none' : 'block';
+    } else {
+      audioP.style.display = 'none';
+      readP.style.display = (readP.style.display === 'block') ? 'none' : 'block';
+    }
+  }
+
+  function openMediaGallery(catKey) {
+    const data = mediaData[catKey];
+    if (!data) return;
+    const panel = document.getElementById('media-gallery-panel');
+    const box = document.getElementById('gallery-box');
+    const content = document.getElementById('gallery-content');
+    box.style.borderTopColor = data.color;
+
+    if (data.privacyOnly) {
+      content.innerHTML = `<h2>${data.title}</h2><div class="privacy-notice"><strong>Datenschutz-Hinweis:</strong> Aus Gründen des Persönlichkeits- und Datenschutzes verzichten wir auf der Webseite bewusst auf die öffentliche Darstellung von Vorher-Nachher-Bildern im Gesichtsbereich. Gerne zeige ich dir bei einem persönlichen Gespräch oder per Anfrage unter <a href="mailto:fa.ma@gmx.at">fa.ma@gmx.at</a> anonymisierte Musterbeispiele!</div>`;
+    } else {
+      let html = `<h2>${data.title}</h2><p style="color:#64748b;">Fotos anklicken zum Vergrößern – Videos & Audios direkt hier abspielen:</p><div class="media-grid">`;
+      data.items.forEach(item => {
+        html += `<div class="media-card"><strong>${item.title}</strong>`;
+        if (item.type === 'image') {
+          html += `<img src="${item.src}" alt="${item.title}" onclick="zoomImage('${item.src}')">`;
+        } else if (item.type === 'video') {
+          html += `<video controls controlsList="nodownload"><source src="${item.src}" type="video/mp4">Video nicht unterstützt.</video>`;
+        } else if (item.type === 'audio') {
+          html += `<audio controls controlsList="nodownload"><source src="${item.src}">Audio nicht unterstützt.</audio>`;
+        }
+        html += `</div>`;
+      });
+      html += `</div>`;
+      content.innerHTML = html;
+    }
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function zoomImage(src) {
+    document.getElementById('zoomImg').src = src;
+    document.getElementById('zoomOverlay').style.display = 'flex';
+  }
+</script>
+</body>
+</html>
